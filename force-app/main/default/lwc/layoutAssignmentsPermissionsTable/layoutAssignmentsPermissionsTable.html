@@ -1,0 +1,24 @@
+<template>
+    <table class="slds-table slds-table_fixed-layout slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
+        <thead>
+          <tr class="slds-line-height_reset">
+            <th class="" scope="col">
+              <div class="slds-truncate" title="Layout">Layout</div>
+            </th>
+            <th class="slds-text-align_center" scope="col">
+              <div class="slds-truncate" title="RecordType">Record Type</div>
+            </th>
+          </tr>                    
+        </thead>
+        <tbody>                
+            <template if:true={objInput.records}>
+                <template for:each={objInput.records} for:item="obj">
+                    <tr key={obj.key} class={obj.class}>
+                        <td role="gridcell"  ><div class="slds-truncate" title={obj.layout_display}>{obj.layout_display}</div></td>
+                        <td class="slds-text-align_center">{obj.recordType}</td>
+                    </tr>
+                </template>
+            </template>
+        </tbody>
+      </table>
+</template>

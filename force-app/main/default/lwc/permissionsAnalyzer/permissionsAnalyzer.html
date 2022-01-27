@@ -1,0 +1,684 @@
+<template>
+<div class="c-container slds-card">
+<div if:false={isLoaded} class="slds-align--absolute-center">
+  <lightning-spinner alternative-text="Loading...">
+  </lightning-spinner>
+</div>
+<lightning-layout multiple-rows>
+<lightning-layout-item size=12>
+  <lightning-tabset>
+    <lightning-tab label="Environment1">
+      <lightning-layout>
+        <lightning-layout-item size=2>
+          <lightning-combobox name="Environment1"
+          label="Select Environment"
+          placeholder="Select"
+          options={envNames}
+          onchange={handleFirstEnvChange}
+          class="slds-p-left_small"
+          >
+          </lightning-combobox>
+        </lightning-layout-item>
+      </lightning-layout>
+      <lightning-layout>
+        <lightning-layout-item size=12>
+          <c-custom-dual-list-box profile-names={profileNames1} is-first-or-second="first" permission-set-names={permissionSetNames1} onselectedprofiles={handleSelectedProfiles} onselectedpermissionsets={handleSelectedPermissionSets}></c-custom-dual-list-box>
+        </lightning-layout-item>
+      </lightning-layout>
+    </lightning-tab>
+    <lightning-tab label="Environment2"> 
+      <lightning-layout>
+        <lightning-layout-item size=2>
+          <lightning-combobox name="Environment2"
+          label="Select Environment"
+          placeholder="Select"
+          options={envNames}
+          onchange={handleSecondEnvChange}
+          class="slds-p-left_small"
+          >
+          </lightning-combobox>
+        </lightning-layout-item>
+      </lightning-layout>
+      <lightning-layout>
+        <lightning-layout-item size=12>
+          <c-custom-dual-list-box profile-names={profileNames2} is-first-or-second="second" permission-set-names={permissionSetNames2} onselectedprofiles={handleSelectedProfiles} onselectedpermissionsets={handleSelectedPermissionSets}></c-custom-dual-list-box>
+        </lightning-layout-item>
+      </lightning-layout>
+    </lightning-tab>        
+</lightning-tabset>
+</lightning-layout-item>
+<lightning-layout-item size=12 class="slds-m-bottom_medium">
+  <lightning-layout class="slds-grid_align-center slds-grid_vertical-align-center">
+    <lightning-layout-item size=1 padding="around-x_small">          
+      <lightning-button variant="brand" label="Compare" title="Compare" onclick={invokeComparison} class="slds-m-left_x-small"></lightning-button>          
+    </lightning-layout-item>
+  </lightning-layout>
+</lightning-layout-item>
+<lightning-layout-item size=12 class="slds-m-bottom_x-large">
+  <lightning-layout class="slds-grid_align-end slds-grid_vertical-align-end" vertical-align="end">
+    <lightning-layout-item size=2 padding="around-small">
+      <lightning-combobox
+        name="PermissionsType"
+        label="Permissions Type"
+        value={defaultPermissionsType}
+        placeholder="Select"
+        options={permTypeOptions}
+        onchange={handlePermTypeChange}
+      >
+      </lightning-combobox>
+    </lightning-layout-item>
+    <lightning-layout-item size=2 padding="around-small">
+      <lightning-combobox
+        name="Results"
+        label="Results"
+        placeholder="Select"
+        options={resultsOptions}
+        onchange={handleResultsChange}
+      >
+      </lightning-combobox>
+    </lightning-layout-item>
+  </lightning-layout>
+</lightning-layout-item>
+<lightning-layout-item size=12>
+  <template if:true={isMultiple}>
+    <lightning-layout multiple-rows>
+      <lightning-layout-item size=12>
+        <lightning-layout>
+            <template if:true={isObjectPermissions}>
+              <lightning-layout-item size="6" flexibility="no-flex">
+                <div class="slds-var-m-bottom_small">
+                  <template if:true={objComp1} class="slds-var-m-left_xx-small">
+                    <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense} ></c-summary-header>
+                  </template>
+                </div>
+                <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+                  <template if:true={objComp1Expression}>
+                    <c-object-permissions-table obj-input={objComp1}></c-object-permissions-table>
+                  </template>
+                </div>
+            </lightning-layout-item>
+            <lightning-layout-item size="6" flexibility="no-flex">
+                <div class="slds-var-m-bottom_small">
+                  <template if:true={objComp2} class="slds-var-m-left_xx-small">
+                    <c-summary-header full-name={objComp2.fullName} custom={objComp2.custom} user-license={objComp2.userLicense} ></c-summary-header>                  
+                  </template>
+                </div>
+                <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">
+                  <template if:true={objComp2Expression}>
+                    <c-object-permissions-table obj-input={objComp2}></c-object-permissions-table>
+                  </template>  
+                </div>
+            </lightning-layout-item>      
+          </template>
+        </lightning-layout>      
+      </lightning-layout-item>
+      <lightning-layout-item size=12>
+        <lightning-layout>
+            <template if:true={isFieldPermissions}>
+              <lightning-layout-item size="6" flexibility="no-flex">
+                <div class="slds-var-m-bottom_small">
+                  <template if:true={objComp1} class="slds-var-m-left_xx-small">
+                    <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense} ></c-summary-header>
+                  </template>
+                </div>
+                <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+                  <template if:true={objComp1Expression}>
+                    <c-field-permissions-table obj-input={objComp1}></c-field-permissions-table>
+                  </template>
+                </div>
+            </lightning-layout-item>
+            <lightning-layout-item size="6" flexibility="no-flex">
+                <div class="slds-var-m-bottom_small">
+                  <template if:true={objComp2} class="slds-var-m-left_xx-small">
+                    <c-summary-header full-name={objComp2.fullName} custom={objComp2.custom} user-license={objComp2.userLicense} ></c-summary-header>                  
+                  </template>
+                </div>
+                <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">
+                  <template if:true={objComp2Expression}>
+                    <c-field-permissions-table obj-input={objComp2}></c-field-permissions-table>
+                  </template>  
+                </div>
+            </lightning-layout-item>      
+          </template>
+        </lightning-layout>      
+      </lightning-layout-item>
+      <lightning-layout-item size=12>
+        <lightning-layout>
+            <template if:true={isUserPermissions}>
+              <lightning-layout-item size="6" flexibility="no-flex">
+                <div class="slds-var-m-bottom_small">
+                  <template if:true={objComp1} class="slds-var-m-left_xx-small">
+                    <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense} ></c-summary-header>
+                  </template>
+                </div>
+                <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+                  <template if:true={objComp1Expression}>
+                    <c-user-permissions-table obj-input={objComp1}></c-user-permissions-table>
+                  </template>
+                </div>
+            </lightning-layout-item>
+            <lightning-layout-item size="6" flexibility="no-flex">
+                <div class="slds-var-m-bottom_small">
+                  <template if:true={objComp2} class="slds-var-m-left_xx-small">
+                    <c-summary-header full-name={objComp2.fullName} custom={objComp2.custom} user-license={objComp2.userLicense} ></c-summary-header>                  
+                  </template>
+                </div>
+                <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">
+                  <template if:true={objComp2Expression}>
+                    <c-user-permissions-table obj-input={objComp2}></c-user-permissions-table>
+                  </template>  
+                </div>
+            </lightning-layout-item>
+          </template>
+        </lightning-layout>      
+      </lightning-layout-item>
+      <lightning-layout-item size=12>
+        <lightning-layout>
+            <template if:true={isApplicationVisibilitiesPermissions}>
+              <lightning-layout-item size="6" flexibility="no-flex">
+                <div class="slds-var-m-bottom_small">
+                  <template if:true={objComp1} class="slds-var-m-left_xx-small">
+                    <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense} ></c-summary-header>
+                  </template>
+                </div>
+                <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+                  <template if:true={objComp1Expression}>
+                    <c-application-visibility-permissions-table obj-input={objComp1}></c-application-visibility-permissions-table>
+                  </template>
+                </div>
+            </lightning-layout-item>
+            <lightning-layout-item size="6" flexibility="no-flex">
+                <div class="slds-var-m-bottom_small">
+                  <template if:true={objComp2} class="slds-var-m-left_xx-small">
+                    <c-summary-header full-name={objComp2.fullName} custom={objComp2.custom} user-license={objComp2.userLicense} ></c-summary-header>                  
+                  </template>
+                </div>
+                <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">
+                  <template if:true={objComp2Expression}>
+                    <c-application-visibility-permissions-table obj-input={objComp2}></c-application-visibility-permissions-table>
+                  </template>  
+                </div>
+            </lightning-layout-item>
+          </template>
+        </lightning-layout>      
+      </lightning-layout-item>
+      <lightning-layout-item size=12>
+        <lightning-layout>
+        <template if:true={isClassAccessesPermissions}>
+          <lightning-layout-item size="6" flexibility="no-flex">
+            <div class="slds-var-m-bottom_small">
+              <template if:true={objComp1} class="slds-var-m-left_xx-small">
+              <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense} ></c-summary-header>
+              </template>
+            </div>
+            <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+              <template if:true={objComp1Expression}>
+              <c-class-accesses-permissions-table obj-input={objComp1}></c-class-accesses-permissions-table>
+              </template>
+            </div>
+          </lightning-layout-item>
+          <lightning-layout-item size="6" flexibility="no-flex">
+            <div class="slds-var-m-bottom_small">
+              <template if:true={objComp2} class="slds-var-m-left_xx-small">
+              <c-summary-header full-name={objComp2.fullName} custom={objComp2.custom} user-license={objComp2.userLicense} ></c-summary-header>                  
+              </template>
+            </div>
+            <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">
+              <template if:true={objComp2Expression}>
+              <c-class-accesses-permissions-table obj-input={objComp2}></c-class-accesses-permissions-table>
+              </template>  
+            </div>
+          </lightning-layout-item>      
+        </template>
+      </lightning-layout>	
+    </lightning-layout-item>
+    <lightning-layout-item size=12>
+        <lightning-layout>    
+        <template if:true={isCustomMetadataPermissions}>
+          <lightning-layout-item size="6" flexibility="no-flex">
+          <div class="slds-var-m-bottom_small">
+            <template if:true={objComp1} class="slds-var-m-left_xx-small">
+            <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense} ></c-summary-header>
+            </template>
+          </div>
+          <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+            <template if:true={objComp1Expression}>
+            <c-custom-metadata-type-permissions-table obj-input={objComp1}></c-custom-metadata-type-permissions-table>
+            </template>
+          </div>
+        </lightning-layout-item>
+        <lightning-layout-item size="6" flexibility="no-flex">
+          <div class="slds-var-m-bottom_small">
+            <template if:true={objComp2} class="slds-var-m-left_xx-small">
+            <c-summary-header full-name={objComp2.fullName} custom={objComp2.custom} user-license={objComp2.userLicense} ></c-summary-header>                  
+            </template>
+          </div>
+          <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">
+            <template if:true={objComp2Expression}>
+            <c-custom-metadata-type-permissions-table obj-input={objComp2}></c-custom-metadata-type-permissions-table>
+            </template>  
+          </div>
+        </lightning-layout-item>      
+        </template>
+      </lightning-layout>	
+    </lightning-layout-item>		
+    <lightning-layout-item size=12>
+        <lightning-layout>  
+        <template if:true={isExternaDataSourcePermissions}>
+          <lightning-layout-item size="6" flexibility="no-flex">
+          <div class="slds-var-m-bottom_small">
+            <template if:true={objComp1} class="slds-var-m-left_xx-small">
+            <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense} ></c-summary-header>
+            </template>
+          </div>
+          <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+            <template if:true={objComp1Expression}>
+            <c-external-data-source-permissions-table obj-input={objComp1}></c-external-data-source-permissions-table>
+            </template>
+          </div>
+        </lightning-layout-item>
+        <lightning-layout-item size="6" flexibility="no-flex">
+          <div class="slds-var-m-bottom_small">
+            <template if:true={objComp2} class="slds-var-m-left_xx-small">
+            <c-summary-header full-name={objComp2.fullName} custom={objComp2.custom} user-license={objComp2.userLicense} ></c-summary-header>                  
+            </template>
+          </div>
+          <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">
+            <template if:true={objComp2Expression}>
+            <c-external-data-source-permissions-table obj-input={objComp2}></c-external-data-source-permissions-table>
+            </template>  
+          </div>
+        </lightning-layout-item>      
+        </template>
+      </lightning-layout>	
+    </lightning-layout-item>
+    <lightning-layout-item size=12>
+        <lightning-layout>  
+        <template if:true={isFlowAccessesPermissions}>
+          <lightning-layout-item size="6" flexibility="no-flex">
+          <div class="slds-var-m-bottom_small">
+            <template if:true={objComp1} class="slds-var-m-left_xx-small">
+            <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense} ></c-summary-header>
+            </template>
+          </div>
+          <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+            <template if:true={objComp1Expression}>
+            <c-flow-accesses-permissions-table obj-input={objComp1}></c-flow-accesses-permissions-table>
+            </template>
+          </div>
+        </lightning-layout-item>
+        <lightning-layout-item size="6" flexibility="no-flex">
+          <div class="slds-var-m-bottom_small">
+            <template if:true={objComp2} class="slds-var-m-left_xx-small">
+            <c-summary-header full-name={objComp2.fullName} custom={objComp2.custom} user-license={objComp2.userLicense} ></c-summary-header>                  
+            </template>
+          </div>
+          <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">
+            <template if:true={objComp2Expression}>
+            <c-flow-accesses-permissions-table obj-input={objComp2}></c-flow-accesses-permissions-table>
+            </template>  
+          </div>
+        </lightning-layout-item>      
+        </template>
+      </lightning-layout>	
+    </lightning-layout-item>
+    <lightning-layout-item size=12>
+        <lightning-layout>  
+        <template if:true={isLayoutAssignmentsPermissions}>
+          <lightning-layout-item size="6" flexibility="no-flex">
+          <div class="slds-var-m-bottom_small">
+            <template if:true={objComp1} class="slds-var-m-left_xx-small">
+            <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense} ></c-summary-header>
+            </template>
+          </div>
+          <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+            <template if:true={objComp1Expression}>
+            <c-layout-assignments-permissions-table obj-input={objComp1}></c-layout-assignments-permissions-table>
+            </template>
+          </div>
+        </lightning-layout-item>
+        <lightning-layout-item size="6" flexibility="no-flex">
+          <div class="slds-var-m-bottom_small">
+            <template if:true={objComp2} class="slds-var-m-left_xx-small">
+            <c-summary-header full-name={objComp2.fullName} custom={objComp2.custom} user-license={objComp2.userLicense} ></c-summary-header>                  
+            </template>
+          </div>
+          <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">
+            <template if:true={objComp2Expression}>
+            <c-layout-assignments-permissions-table obj-input={objComp2}></c-layout-assignments-permissions-table>
+            </template>  
+          </div>
+        </lightning-layout-item>      
+        </template>
+      </lightning-layout>	
+    </lightning-layout-item>
+    <lightning-layout-item size=12>
+        <lightning-layout>  
+        <template if:true={isPageAccessesPermissions}>
+          <lightning-layout-item size="6" flexibility="no-flex">
+          <div class="slds-var-m-bottom_small">
+            <template if:true={objComp1} class="slds-var-m-left_xx-small">
+            <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense} ></c-summary-header>
+            </template>
+          </div>
+          <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+            <template if:true={objComp1Expression}>
+            <c-page-accesses-permissions-table obj-input={objComp1}></c-page-accesses-permissions-table>
+            </template>
+          </div>
+        </lightning-layout-item>
+        <lightning-layout-item size="6" flexibility="no-flex">
+          <div class="slds-var-m-bottom_small">
+            <template if:true={objComp2} class="slds-var-m-left_xx-small">
+            <c-summary-header full-name={objComp2.fullName} custom={objComp2.custom} user-license={objComp2.userLicense} ></c-summary-header>                  
+            </template>
+          </div>
+          <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">
+            <template if:true={objComp2Expression}>
+            <c-page-accesses-permissions-table obj-input={objComp2}></c-page-accesses-permissions-table>
+            </template>  
+          </div>
+        </lightning-layout-item>      
+        </template>
+      </lightning-layout>	
+    </lightning-layout-item>
+    <lightning-layout-item size=12>
+        <lightning-layout>  
+        <template if:true={isRecordTypeVisibilitiesPermissions}>
+          <lightning-layout-item size="6" flexibility="no-flex">
+          <div class="slds-var-m-bottom_small">
+            <template if:true={objComp1} class="slds-var-m-left_xx-small">
+            <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense} ></c-summary-header>
+            </template>
+          </div>
+          <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+            <template if:true={objComp1Expression}>
+            <c-record-type-permissions-table obj-input={objComp1}></c-record-type-permissions-table>
+            </template>
+          </div>
+        </lightning-layout-item>
+        <lightning-layout-item size="6" flexibility="no-flex">
+          <div class="slds-var-m-bottom_small">
+            <template if:true={objComp2} class="slds-var-m-left_xx-small">
+            <c-summary-header full-name={objComp2.fullName} custom={objComp2.custom} user-license={objComp2.userLicense} ></c-summary-header>                  
+            </template>
+          </div>
+          <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">
+            <template if:true={objComp2Expression}>
+            <c-record-type-permissions-table obj-input={objComp2}></c-record-type-permissions-table>
+            </template>  
+          </div>
+        </lightning-layout-item>      
+        </template>
+      </lightning-layout>	
+    </lightning-layout-item>
+    <lightning-layout-item size=12>
+        <lightning-layout>  
+        <template if:true={isTabVisibilitiesPermissions}>
+          <lightning-layout-item size="6" flexibility="no-flex">
+          <div class="slds-var-m-bottom_small">
+            <template if:true={objComp1} class="slds-var-m-left_xx-small">
+            <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense} ></c-summary-header>
+            </template>
+          </div>
+          <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+            <template if:true={objComp1Expression}>
+            <c-tab-visibilities-permissions-table obj-input={objComp1}></c-tab-visibilities-permissions-table>
+            </template>
+          </div>
+        </lightning-layout-item>
+        <lightning-layout-item size="6" flexibility="no-flex">
+          <div class="slds-var-m-bottom_small">
+            <template if:true={objComp2} class="slds-var-m-left_xx-small">
+            <c-summary-header full-name={objComp2.fullName} custom={objComp2.custom} user-license={objComp2.userLicense} ></c-summary-header>                  
+            </template>
+          </div>
+          <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">
+            <template if:true={objComp2Expression}>
+            <c-tab-visibilities-permissions-table obj-input={objComp2}></c-tab-visibilities-permissions-table>
+            </template>  
+          </div>
+        </lightning-layout-item>      
+        </template>
+      </lightning-layout>	
+    </lightning-layout-item>
+      <lightning-layout-item size=12>      
+        <template if:true={noRecordsFound}>
+          <div class="slds-var-m-bottom_large slds-var-m-left_xx-small slds-var-m-right_xx-small slds-border_right slds-border_left slds-border_top slds-border_bottom slds-text-align_center">
+            No Data Found
+        </div>
+        </template>
+      </lightning-layout-item>
+    </lightning-layout>
+  </template>
+  <template if:true={isSingle}>
+    <lightning-layout multiple-rows>
+      <lightning-layout-item size=12>
+        <lightning-layout>
+            <template if:true={isObjectPermissions}>
+              <lightning-layout-item size="12" flexibility="no-flex">
+                <div class="slds-var-m-bottom_small">
+                  <template if:true={objComp1} class="slds-var-m-left_xx-small">
+                    <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense}></c-summary-header>
+                  </template>
+                </div>
+                <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+                  <template if:true={objComp1Expression}>
+                    <c-object-permissions-table obj-input={objComp1}></c-object-permissions-table>
+                  </template>
+                </div>
+            </lightning-layout-item>      
+          </template>
+        </lightning-layout>      
+      </lightning-layout-item>
+      <lightning-layout-item size=12>
+        <lightning-layout>
+            <template if:true={isFieldPermissions}>
+              <lightning-layout-item size="12" flexibility="no-flex">
+                <div class="slds-var-m-bottom_small">
+                  <template if:true={objComp1} class="slds-var-m-left_xx-small">
+                    <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense} ></c-summary-header>
+                  </template>
+                </div>
+                <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">
+                  <template if:true={objComp1Expression}>
+                    <c-field-permissions-table obj-input={objComp1}></c-field-permissions-table>
+                  </template>
+                </div>
+            </lightning-layout-item>
+          </template>
+        </lightning-layout>      
+      </lightning-layout-item>
+      <lightning-layout-item size=12>
+        <lightning-layout>
+            <template if:true={isUserPermissions}>
+              <lightning-layout-item size="12" flexibility="no-flex">
+                <div class="slds-var-m-bottom_small">
+                  <template if:true={objComp1} class="slds-var-m-left_xx-small">
+                    <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense} ></c-summary-header>
+                  </template>
+                </div>
+                <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+                  <template if:true={objComp1Expression}>
+                    <c-user-permissions-table obj-input={objComp1}></c-user-permissions-table>
+                  </template>
+                </div>
+            </lightning-layout-item>
+          </template>
+        </lightning-layout>      
+      </lightning-layout-item>
+      <lightning-layout-item size=12>
+        <lightning-layout>
+          <template if:true={isApplicationVisibilitiesPermissions}>
+            <lightning-layout-item size="12" flexibility="no-flex">
+              <div class="slds-var-m-bottom_small">
+                <template if:true={objComp1} class="slds-var-m-left_xx-small">
+                <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense}></c-summary-header>
+                </template>
+              </div>
+              <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+                <template if:true={objComp1Expression}>
+                <c-application-visibility-permissions-table obj-input={objComp1}></c-application-visibility-permissions-table>
+                </template>
+              </div>
+            </lightning-layout-item>      
+          </template>
+        </lightning-layout>      
+      </lightning-layout-item>
+      <lightning-layout-item size=12>
+        <lightning-layout>
+          <template if:true={isClassAccessesPermissions}>
+            <lightning-layout-item size="12" flexibility="no-flex">
+              <div class="slds-var-m-bottom_small">
+                <template if:true={objComp1} class="slds-var-m-left_xx-small">
+                <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense}></c-summary-header>
+                </template>
+              </div>
+              <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+                <template if:true={objComp1Expression}>
+                <c-class-accesses-permissions-table obj-input={objComp1}></c-class-accesses-permissions-table>
+                </template>
+              </div>
+            </lightning-layout-item>      
+          </template>
+        </lightning-layout>      
+      </lightning-layout-item>
+      <lightning-layout-item size=12>
+        <lightning-layout>
+          <template if:true={isCustomMetadataPermissions}>
+            <lightning-layout-item size="12" flexibility="no-flex">
+              <div class="slds-var-m-bottom_small">
+                <template if:true={objComp1} class="slds-var-m-left_xx-small">
+                <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense}></c-summary-header>
+                </template>
+              </div>
+              <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+                <template if:true={objComp1Expression}>
+                <c-custom-metadata-type-permissions-table obj-input={objComp1}></c-custom-metadata-type-permissions-table>
+                </template>
+              </div>
+            </lightning-layout-item>      
+          </template>
+        </lightning-layout>      
+      </lightning-layout-item>
+      <lightning-layout-item size=12>
+        <lightning-layout>
+          <template if:true={isExternaDataSourcePermissions}>
+            <lightning-layout-item size="12" flexibility="no-flex">
+              <div class="slds-var-m-bottom_small">
+                <template if:true={objComp1} class="slds-var-m-left_xx-small">
+                <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense}></c-summary-header>
+                </template>
+              </div>
+              <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+                <template if:true={objComp1Expression}>
+                <c-external-data-source-permissions-table obj-input={objComp1}></c-external-data-source-permissions-table>
+                </template>
+              </div>
+            </lightning-layout-item>      
+          </template>
+        </lightning-layout>      
+      </lightning-layout-item>
+      <lightning-layout-item size=12>
+        <lightning-layout>
+          <template if:true={isFlowAccessesPermissions}>
+            <lightning-layout-item size="12" flexibility="no-flex">
+              <div class="slds-var-m-bottom_small">
+                <template if:true={objComp1} class="slds-var-m-left_xx-small">
+                <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense}></c-summary-header>
+                </template>
+              </div>
+              <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+                <template if:true={objComp1Expression}>
+                <c-flow-accesses-permissions-table obj-input={objComp1}></c-flow-accesses-permissions-table>
+                </template>
+              </div>
+            </lightning-layout-item>      
+          </template>
+        </lightning-layout>      
+      </lightning-layout-item>
+      <lightning-layout-item size=12>
+        <lightning-layout>
+          <template if:true={isLayoutAssignmentsPermissions}>
+            <lightning-layout-item size="12" flexibility="no-flex">
+              <div class="slds-var-m-bottom_small">
+                <template if:true={objComp1} class="slds-var-m-left_xx-small">
+                <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense}></c-summary-header>
+                </template>
+              </div>
+              <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+                <template if:true={objComp1Expression}>
+                <c-layout-assignments-permissions-table obj-input={objComp1}></c-layout-assignments-permissions-table>
+                </template>
+              </div>
+            </lightning-layout-item>      
+          </template>
+        </lightning-layout>      
+      </lightning-layout-item>
+      <lightning-layout-item size=12>
+        <lightning-layout>
+          <template if:true={isPageAccessesPermissions}>
+            <lightning-layout-item size="12" flexibility="no-flex">
+              <div class="slds-var-m-bottom_small">
+                <template if:true={objComp1} class="slds-var-m-left_xx-small">
+                <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense}></c-summary-header>
+                </template>
+              </div>
+              <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+                <template if:true={objComp1Expression}>
+                <c-page-accesses-permissions-table obj-input={objComp1}></c-page-accesses-permissions-table>
+                </template>
+              </div>
+            </lightning-layout-item>      
+          </template>
+        </lightning-layout>      
+      </lightning-layout-item>
+      <lightning-layout-item size=12>
+        <lightning-layout>
+          <template if:true={isRecordTypeVisibilitiesPermissions}>
+            <lightning-layout-item size="12" flexibility="no-flex">
+              <div class="slds-var-m-bottom_small">
+                <template if:true={objComp1} class="slds-var-m-left_xx-small">
+                <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense}></c-summary-header>
+                </template>
+              </div>
+              <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+                <template if:true={objComp1Expression}>
+                <c-record-type-permissions-table obj-input={objComp1}></c-record-type-permissions-table>
+                </template>
+              </div>
+            </lightning-layout-item>      
+          </template>
+        </lightning-layout>      
+      </lightning-layout-item>
+      <lightning-layout-item size=12>
+        <lightning-layout>
+          <template if:true={isTabVisibilitiesPermissions}>
+            <lightning-layout-item size="12" flexibility="no-flex">
+              <div class="slds-var-m-bottom_small">
+                <template if:true={objComp1} class="slds-var-m-left_xx-small">
+                <c-summary-header full-name={objComp1.fullName} custom={objComp1.custom} user-license={objComp1.userLicense}></c-summary-header>
+                </template>
+              </div>
+              <div class="slds-var-m-around_xx-small slds-scrollable slds-border_right slds-border_left">                               
+                <template if:true={objComp1Expression}>
+                <c-tab-visibilities-permissions-table obj-input={objComp1}></c-tab-visibilities-permissions-table>
+                </template>
+              </div>
+            </lightning-layout-item>      
+          </template>
+        </lightning-layout>      
+      </lightning-layout-item>
+      <lightning-layout-item size=12>      
+        <template if:true={noRecordsFoundSingular}>
+          <div class="slds-var-m-bottom_large slds-var-m-left_xx-small slds-var-m-right_xx-small slds-border_right slds-border_left slds-border_top slds-border_bottom slds-text-align_center">
+            No Data Found
+        </div>
+        </template>
+      </lightning-layout-item>
+    </lightning-layout>
+  </template>
+</lightning-layout-item>
+</lightning-layout>
+</div>
+</template>

@@ -1,0 +1,44 @@
+<template>
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
+        <thead>
+          <tr class="slds-line-height_reset">
+            <th class="" scope="col">
+              <div class="slds-truncate" title="Object Name">Object Name</div>
+            </th>
+            <th class="" scope="col">
+              <div class="slds-truncate" title="Create">Create</div>
+            </th>
+            <th class="" scope="col">
+              <div class="slds-truncate" title="Read">Read</div>
+            </th>
+            <th class="" scope="col">
+              <div class="slds-truncate" title="Edit">Edit</div>
+            </th>
+            <th class="" scope="col">
+              <div class="slds-truncate" title="Delete">Delete</div>
+            </th>
+            <th class="" scope="col">
+              <div class="slds-truncate" title="View All">View All</div>
+            </th>
+            <th class="" scope="col">
+              <div class="slds-truncate" title="Modify All">Modify All</div>
+            </th>
+          </tr>                    
+        </thead>
+        <tbody>                
+            <template if:true={objInput.records}>
+                <template for:each={objInput.records} for:item="obj">
+                    <tr key={obj.key} class={obj.class}>
+                        <td>{obj.object_display}</td>
+                        <td>{obj.allowCreate}</td>
+                        <td>{obj.allowRead}</td>
+                        <td>{obj.allowEdit}</td>
+                        <td>{obj.allowDelete}</td>
+                        <td>{obj.viewAllRecords}</td>
+                        <td>{obj.modifyAllRecords}</td>
+                    </tr>
+                </template>
+            </template>
+        </tbody>
+      </table>
+</template>

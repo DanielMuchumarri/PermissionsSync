@@ -1,0 +1,28 @@
+<template>
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
+        <thead>
+          <tr class="slds-line-height_reset">
+            <th class="" scope="col">
+              <div class="slds-truncate" title="Record Type">Record Type</div>
+            </th>
+            <th class="" scope="col">
+              <div class="slds-truncate" title="Default">Default</div>
+            </th>
+            <th class="" scope="col">
+                <div class="slds-truncate" title="Visible">Visible</div>
+              </th>
+          </tr>                    
+        </thead>
+        <tbody>                
+            <template if:true={objInput.records}>
+                <template for:each={objInput.records} for:item="obj">
+                    <tr key={obj.key} class={obj.class}>
+                        <td>{obj.recordType_display}</td>
+                        <td>{obj.default_x}</td>
+                        <td>{obj.visible}</td>
+                    </tr>
+                </template>
+            </template>
+        </tbody>
+      </table>
+</template>

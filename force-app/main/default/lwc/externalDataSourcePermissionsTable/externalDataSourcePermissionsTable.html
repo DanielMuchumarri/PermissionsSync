@@ -1,0 +1,24 @@
+<template>
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
+        <thead>
+          <tr class="slds-line-height_reset">
+            <th class="" scope="col">
+              <div class="slds-truncate" title="ExternalDataSource">ExternalDataSource</div>
+            </th>
+            <th class="" scope="col">
+              <div class="slds-truncate" title="Enabled">Enabled</div>
+            </th>
+          </tr>                    
+        </thead>
+        <tbody>                
+            <template if:true={objInput.records}>
+                <template for:each={objInput.records} for:item="obj">
+                    <tr key={obj.key} class={obj.class}>
+                        <td>{obj.externalDataSource_display}</td>
+                        <td>{obj.enabled}</td>                        
+                    </tr>
+                </template>
+            </template>
+        </tbody>
+      </table>
+</template>

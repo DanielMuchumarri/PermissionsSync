@@ -1,0 +1,28 @@
+<template>
+    <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-labelledby="element-with-table-label other-element-with-table-label">
+        <thead>
+          <tr class="slds-line-height_reset">
+            <th class="" scope="col">
+              <div class="slds-truncate" title="Field">Field</div>
+            </th>
+            <th class="" scope="col">
+              <div class="slds-truncate" title="Readable">Readable</div>
+            </th>
+            <th class="" scope="col">
+              <div class="slds-truncate" title="Editable">Editable</div>
+            </th>
+          </tr>                    
+        </thead>
+        <tbody>                
+            <template if:true={objInput.records}>
+                <template for:each={objInput.records} for:item="obj">
+                    <tr key={obj.key} class={obj.class}>
+                        <td>{obj.field_display}</td>
+                        <td>{obj.readable}</td>
+                        <td>{obj.editable}</td>
+                    </tr>
+                </template>
+            </template>
+        </tbody>
+      </table>
+</template>

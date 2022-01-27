@@ -1,0 +1,26 @@
+<template>
+    <lightning-layout>
+        <lightning-layout-item size=6 flexibility="shrink,no-grow" padding="around-small">
+            <lightning-dual-listbox name="profiles"
+            label="Profile Names"
+            source-label="Available"
+            selected-label="Selected"
+            field-level-help="Select your preferred profile"
+            options={profileNames}
+            onchange = {handleProfChange}
+            >
+            </lightning-dual-listbox>
+        </lightning-layout-item>
+        <lightning-layout-item size=6 flexibility="shrink,no-grow" padding="around-small">
+            <lightning-dual-listbox name="permissionSet"
+            label="Permission Set Names"
+            source-label="Available"
+            selected-label="Selected"
+            field-level-help="Select your preferred permission set"
+            options={permissionSetNames}
+            onchange = {handlePermSetChange}
+            >
+            </lightning-dual-listbox>
+        </lightning-layout-item>
+    </lightning-layout>
+</template>
