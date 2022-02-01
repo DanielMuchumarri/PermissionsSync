@@ -7,7 +7,7 @@
 <lightning-layout multiple-rows>
 <lightning-layout-item size=12>
   <lightning-tabset>
-    <lightning-tab label="Environment1">
+    <lightning-tab label="One" icon-name="utility:desktop">
       <lightning-layout>
         <lightning-layout-item size=2>
           <lightning-combobox name="Environment1"
@@ -15,7 +15,7 @@
           placeholder="Select"
           options={envNames}
           onchange={handleFirstEnvChange}
-          class="slds-p-left_small"
+          class="slds-p-left_small labelColor"
           >
           </lightning-combobox>
         </lightning-layout-item>
@@ -26,7 +26,7 @@
         </lightning-layout-item>
       </lightning-layout>
     </lightning-tab>
-    <lightning-tab label="Environment2"> 
+    <lightning-tab label="Two" icon-name="utility:desktop"> 
       <lightning-layout>
         <lightning-layout-item size=2>
           <lightning-combobox name="Environment2"
@@ -34,7 +34,7 @@
           placeholder="Select"
           options={envNames}
           onchange={handleSecondEnvChange}
-          class="slds-p-left_small"
+          class="slds-p-left_small labelColor"
           >
           </lightning-combobox>
         </lightning-layout-item>
@@ -56,7 +56,7 @@
 </lightning-layout-item>
 <lightning-layout-item size=12 class="slds-m-bottom_x-large">
   <lightning-layout class="slds-grid_align-end slds-grid_vertical-align-end" vertical-align="end">
-    <lightning-layout-item size=2 padding="around-small">
+    <lightning-layout-item size=2 padding="around-small" class="labelColor">
       <lightning-combobox
         name="PermissionsType"
         label="Permissions Type"
@@ -67,7 +67,7 @@
       >
       </lightning-combobox>
     </lightning-layout-item>
-    <lightning-layout-item size=2 padding="around-small">
+    <lightning-layout-item size=2 padding="around-small" class="labelColor">
       <lightning-combobox
         name="Results"
         label="Results"

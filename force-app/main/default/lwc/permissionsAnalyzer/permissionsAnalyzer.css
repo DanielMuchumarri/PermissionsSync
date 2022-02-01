@@ -9,3 +9,7 @@
 .difference{
     color:red;
 }
+
+.labelColor{
+    --lwc-colorTextLabel:blue;
+}
