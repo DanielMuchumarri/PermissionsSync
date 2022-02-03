@@ -98,6 +98,19 @@ wirePermissionsType({error,data}){
     this.permTypeOptions = permTypeArray;
 }
 
+get isPermissionsCardVisible(){
+    return (this.objComp1 !== null && this.objComp1 !== undefined && this.objComp1.hasOwnProperty('envId'))?true:false;
+}
+
+get isObjComp1(){
+    return (this.objComp1 !== null && this.objComp1 !== undefined && this.objComp1.records !== null && this.objComp1.records !== undefined && this.objComp1.records.length >0 && this.objComp1.hasOwnProperty('envId'))?true:false;
+}
+
+
+get isObjComp2(){
+    return (this.objComp2 !== null && this.objComp2 !== undefined && this.objComp2.records !== null && this.objComp2.records !== undefined && this.objComp2.records.length >0 && this.objComp2.hasOwnProperty('envId'))?true:false;
+}
+
 handleFirstEnvChange(event){
     let firstEnvironmentId = event.detail.value;
     this.selectedEnvironment1 = firstEnvironmentId;
@@ -1132,6 +1145,21 @@ ConvertToMap(permTypeSelected,records){
     return tmpMap;
 }
 
+getEnvName(envId){
+    //let envName;
+    // this.envNames.filter((obj)=>{        
+    //     if(envId == obj.value){
+    //         envName = obj.label;
+    //     }        
+    // });
+    let envObj = this.envNames.filter(env=> envId == env.value);
+    if(envObj !== null && envObj !== undefined && envObj.length ==1){
+        return envObj[0].label;
+    }else{
+        return null;
+    }    
+}
+
 
 dataSegmentation(data){
     let tmpObjArray = [];
@@ -1147,6 +1175,7 @@ dataSegmentation(data){
                             tmpObj.envId = envId;
                             tmpObj.custom = profilePermissions[0].custom;
                             tmpObj.fullName = profilePermissions[0].fullName;
+                            tmpObj.envName = this.getEnvName(tmpObj.envId);
                             tmpObj.userLicense = profilePermissions[0].userLicense;
                             tmpObj.records = profilePermissions[0];
                             tmpObjArray.push(tmpObj);
@@ -1164,6 +1193,7 @@ dataSegmentation(data){
                             tmpObj.envId = envId;
                             tmpObj.custom = permissionSetPermissions[0].custom;
                             tmpObj.fullName = permissionSetPermissions[0].fullName;
+                            tmpObj.envName = this.getEnvName(tmpObj.envId);
                             tmpObj.userLicense = permissionSetPermissions[0].userLicense;
                             tmpObj.records = permissionSetPermissions[0];
                             tmpObjArray.push(tmpObj);
@@ -1185,6 +1215,7 @@ dataSegmentation(data){
                                 tmpObj.envId = envId;
                                 tmpObj.custom = profilePermissions[0].custom;
                                 tmpObj.fullName = profilePermissions[0].fullName;
+                                tmpObj.envName = this.getEnvName(tmpObj.envId);
                                 tmpObj.userLicense = profilePermissions[0].userLicense;
                                 tmpObj.records = profilePermissions[0];
                             }
@@ -1199,6 +1230,7 @@ dataSegmentation(data){
                                 tmpObj.envId = envId;
                                 tmpObj.custom = permissionSetPermissions[0].custom;
                                 tmpObj.fullName = permissionSetPermissions[0].fullName;
+                                tmpObj.envName = this.getEnvName(tmpObj.envId);
                                 tmpObj.userLicense = permissionSetPermissions[0].userLicense;
                                 tmpObj.records = permissionSetPermissions[0];
                             }
@@ -1226,6 +1258,7 @@ dataSegmentationPopulateMultiplePermissions(selectedObjArray,envId,permissions){
                     tmpObj.envId = envId;
                     tmpObj.custom = permObj.custom;
                     tmpObj.fullName = permObj.fullName;
+                    tmpObj.envName = this.getEnvName(tmpObj.envId);
                     tmpObj.userLicense = permObj.userLicense;
                     tmpObj.records = permObj;
                 }
