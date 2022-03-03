@@ -72,6 +72,7 @@ public with sharing class PermissionsController {
                     namedCredential = PermissionsController.getNamedCredential(envId);
                     soapSforceCom200604Metadata.Metadata12 metadata = new soapSforceCom200604Metadata.Metadata12();
                     metadata.endpoint_x = 'callout:'+namedCredential+metadata.endpoint_x;
+                    metadata.timeout_x = 120000;
                     System.debug(metadata.endpoint_x);
                     
                     soapSforceCom200604Metadata.SessionHeader_element sHeader = new soapSforceCom200604Metadata.SessionHeader_element();
@@ -115,6 +116,7 @@ public with sharing class PermissionsController {
                 namedCredential = PermissionsController.getNamedCredential(envId);
                 soapSforceCom200604Metadata.Metadata12 metadata = new soapSforceCom200604Metadata.Metadata12();
                 metadata.endpoint_x = 'callout:'+namedCredential+metadata.endpoint_x;
+                metadata.timeout_x = 120000;
                 System.debug(metadata.endpoint_x);
                 
                 soapSforceCom200604Metadata.SessionHeader_element sHeader = new soapSforceCom200604Metadata.SessionHeader_element();
